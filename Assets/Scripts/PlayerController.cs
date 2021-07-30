@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
         RocketSound = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+    // Update is called once per frame 
     void Update()
     {
         RocketThrust();
