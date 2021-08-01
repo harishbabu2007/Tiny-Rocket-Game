@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float thrustForce, rotationForce;
     AudioSource RocketSound;
 
+    [SerializeField] AudioClip BoostSound;
+
     void Start()
     {
         RocketBody = GetComponent<Rigidbody>();
@@ -27,7 +29,7 @@ public class PlayerController : MonoBehaviour
             RocketBody.AddRelativeForce(0f, thrustForce * Time.deltaTime, 0f);
             if (!RocketSound.isPlaying)
             {
-                RocketSound.Play();
+                RocketSound.PlayOneShot(BoostSound);
             }            
         } else
 		{

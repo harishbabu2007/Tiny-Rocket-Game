@@ -3,23 +3,38 @@ using UnityEngine.SceneManagement;
 
 public class PlayerCollisionHandler : MonoBehaviour
 {
+
+	AudioSource Mainplayer;
+	[SerializeField] AudioClip SuccessSound, DieSound;
+	[SerializeField] float DeathsoundIntensity;
+
+	bool isTransitioning = false;
+
+	void Start()
+	{
+		Mainplayer = GetComponent<AudioSource>();	
+	}
+
 	void OnCollisionEnter(Collision collision)
 	{
 		string tag = collision.gameObject.tag;
 
-		switch (tag)
+		if (!isTransitioning)
 		{
-			case "Obstacle":
-				StartCrashSequence();
-				break;
+			switch (tag)
+			{
+				case "Obstacle":
+					StartCrashSequence();
+					break;
 
-			case "Ground":
-				StartCrashSequence();
-				break;
+				case "Ground":
+					StartCrashSequence();
+					break;
 
-			case "Finish":
-				StartSuccessSequence();
-				break;
+				case "Finish":
+					StartSuccessSequence();
+					break;
+			}
 		}
 	}
 
@@ -27,12 +42,20 @@ public class PlayerCollisionHandler : MonoBehaviour
 	{
 		this.gameObject.GetComponent<PlayerController>().enabled = false;
 		Invoke("ReloadNextScene", 1f);
+
+		Mainplayer.Stop();
+		Mainplayer.PlayOneShot(SuccessSound);
+		isTransitioning = true;
 	}
 
 	void StartCrashSequence()
 	{
 		this.gameObject.GetComponent<PlayerController>().enabled = false;
 		Invoke("ReloadThisScene", 1f);
+
+		Mainplayer.Stop();
+		Mainplayer.PlayOneShot(DieSound, DeathsoundIntensity);
+		isTransitioning = true;
 	}
 
 	void ReloadThisScene()
