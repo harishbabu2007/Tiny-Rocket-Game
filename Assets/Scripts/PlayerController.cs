@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     AudioSource RocketSound;
 
     [SerializeField] AudioClip BoostSound;
+    [SerializeField] ParticleSystem JetParticles, LeftParticle, RightParticle;
 
     void Start()
     {
@@ -29,10 +30,12 @@ public class PlayerController : MonoBehaviour
             RocketBody.AddRelativeForce(0f, thrustForce * Time.deltaTime, 0f);
             if (!RocketSound.isPlaying)
             {
+                JetParticles.Play();
                 RocketSound.PlayOneShot(BoostSound);
             }            
         } else
 		{
+            JetParticles.Stop();
             RocketSound.Stop();
 		}
     }
@@ -46,11 +49,22 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             ApplyRotation(rotationForce);
-        }
+        } else
+		{
+            LeftParticle.Stop();
+            RightParticle.Stop();
+		}
     }
 
     private void ApplyRotation(float _rotationForce)
     {
+        if (_rotationForce > 0)
+		{
+            LeftParticle.Play();
+		} else if (_rotationForce < 0)
+		{
+            RightParticle.Play();
+		}
         RocketBody.freezeRotation = true;
         transform.Rotate(Vector3.forward * _rotationForce * Time.deltaTime);
         RocketBody.freezeRotation = false;

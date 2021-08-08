@@ -7,6 +7,8 @@ public class PlayerCollisionHandler : MonoBehaviour
 	AudioSource Mainplayer;
 	[SerializeField] AudioClip SuccessSound, DieSound;
 	[SerializeField] float DeathsoundIntensity;
+	[SerializeField] ParticleSystem SuccessParticles, DeathParticles;
+	[SerializeField] AudioSource Ambience;
 
 	bool isTransitioning = false;
 
@@ -40,9 +42,11 @@ public class PlayerCollisionHandler : MonoBehaviour
 
 	void StartSuccessSequence()
 	{
+		SuccessParticles.Play();
 		this.gameObject.GetComponent<PlayerController>().enabled = false;
 		Invoke("ReloadNextScene", 1f);
 
+		Ambience.Stop();
 		Mainplayer.Stop();
 		Mainplayer.PlayOneShot(SuccessSound);
 		isTransitioning = true;
@@ -50,9 +54,11 @@ public class PlayerCollisionHandler : MonoBehaviour
 
 	void StartCrashSequence()
 	{
+		DeathParticles.Play();
 		this.gameObject.GetComponent<PlayerController>().enabled = false;
 		Invoke("ReloadThisScene", 1f);
 
+		Ambience.Stop();
 		Mainplayer.Stop();
 		Mainplayer.PlayOneShot(DieSound, DeathsoundIntensity);
 		isTransitioning = true;
